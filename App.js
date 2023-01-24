@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, Alert, Image, FlatList, ImageBackground, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, FlatList, TouchableOpacity, TextInput } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -28,7 +28,7 @@ function HomeScreen({ navigation }) {
         <View style={{ paddingTop: 50 }}>
           <Image
             style={styles.tinyLogo}
-            source={require('../dolarARG/assets/dolar.png')
+            source={require('./assets/dolar.png')
 
             }></Image>
         </View>
@@ -145,7 +145,7 @@ const ButtonCalculadora = () => {
           <Text style={styles.TextName} >Dolar Blue </Text>
           <Image
             style={styles.tinyLogoCalculator}
-            source={require('../dolarARG/assets/dolar.png')}></Image>
+            source={require('./assets/dolar.png')}></Image>
           <Text style={styles.TextName} >Cantidad: </Text>
           <TextInput style={styles.TextInput} name="cantidad" onChangeText={handleInputA} value={cantidad} ></TextInput>
           <View style={styles.containerPrice}>
