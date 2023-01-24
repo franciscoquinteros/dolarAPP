@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { React, useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button, Alert, Image, FlatList, ImageBackground, TouchableOpacity, TextInput } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -155,7 +154,7 @@ const ButtonCalculadora = () => {
             <Text style={styles.TextNamePrice}>Compra:</Text>
             <TextInput style={styles.TextInput} editable={false} value={amountBlueCompra}></TextInput>
           </View>
-          <Text style={styles.TextName}> Resultado:</Text>
+          <Text style={styles.TextName}>ARS</Text>
           <TextInput style={styles.TextInput} editable={false} value={result}></TextInput>
           <Text style={styles.SubName}>Precio actualizado al: {new Date().toLocaleString()}</Text>
         </View>
