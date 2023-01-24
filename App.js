@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, Alert, Image, FlatList, ImageBackground, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Button, Alert, Image, FlatList, ImageBackground, TouchableOpacity, TextInput } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
+import { ScrollView } from 'react-native-gesture-handler';
 
 const Stack = createNativeStackNavigator();
 
@@ -14,7 +14,7 @@ function App() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Cotizacion dolar hoy" component={DolarEnArgentina} />
         <Stack.Screen name="Cotizacion dolar por Banco" component={DolarEnLosBancos} />
-        <Stack.Screen name="Calculadora de conversion" component={ButtonCalculadora} />
+        <Stack.Screen name="Calculadora de Conversion" component={ButtonCalculadora} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -54,7 +54,7 @@ function HomeScreen({ navigation }) {
 function DolarEnLosBancos() {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-  console.log(data);
+
 
   const renderItem = ({ item, index }) => {
 
@@ -111,26 +111,93 @@ const imagesDolarPorBanco = [
 
 
 const ButtonCalculadora = () => {
+  const [isLoading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+  const [cantidad, setCantidad] = useState('');
+  const [result, setResult] = useState("");
+
+
+  const catchItem = ({ item, index }) => {
+
+    if (index == 1) {
+      const amountBlue = item.casa.venta;
+      const amountBlueCompra = item.casa.compra;
+
+      const handleInputA = (e) => {
+        console.log(e);
+        console.log(amountBlue);
+        setCantidad(e);
+        calculate();
+      }
+
+
+      const calculate = () => {
+        if (cantidad !== "" && amountBlue !== "") {
+          const res = parseFloat(cantidad) * parseFloat(amountBlue);
+          console.log(res);
+          setResult(res.toString());
+        } else {
+          setResult('');
+        }
+      }
+
+      return (
+        <View style={styles.containerCalculadora}>
+          <Text style={styles.TextName} >Dolar Blue </Text>
+          <Image
+            style={styles.tinyLogoCalculator}
+            source={require('../dolarARG/assets/dolar.png')}></Image>
+          <Text style={styles.TextName} >Cantidad: </Text>
+          <TextInput style={styles.TextInput} name="cantidad" onChangeText={handleInputA} value={cantidad} ></TextInput>
+          <View style={styles.containerPrice}>
+            <Text style={styles.TextNamePrice}>Venta:</Text>
+            <TextInput style={styles.TextInput} editable={false} value={amountBlue}></TextInput>
+            <Text style={styles.TextNamePrice}>Compra:</Text>
+            <TextInput style={styles.TextInput} editable={false} value={amountBlueCompra}></TextInput>
+          </View>
+          <Text style={styles.TextName}> Resultado:</Text>
+          <TextInput style={styles.TextInput} editable={false} value={result}></TextInput>
+          <Text style={styles.SubName}>Precio actualizado al: {new Date().toLocaleString()}</Text>
+        </View>
+      )
+    }
+  }
+
+  useEffect(() => {
+    fetch('https://www.dolarsi.com/api/api.php?type=valoresprincipales')
+      .then((response) => response.json())
+      .then((json) => setData(json))
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
-    <View style={styles.item}>
-      <Text>Cotizador</Text>
+    <View>
+
+      {isLoading ? (<Text>Loading... </Text>) : (
+        <View style={styles.itemContainer}>
+          <FlatList data={data} renderItem={catchItem} />
+        </View>
+      )}
+
+
     </View>
-  )
+  );
 }
 
 function DolarEnArgentina({ navigation }) {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
-  console.log(data);
 
   const renderItem = ({ item, index }) => {
 
     return (
-      <View>
-        <TouchableOpacity onPressIn={() => navigation.navigate('Calculadora de conversion')}>
+      <ScrollView>
+        <TouchableOpacity onPressIn={() => navigation.navigate('Calculadora de Conversion')}>
           <View style={styles.item} key={index}>
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+
 
               {imagesDolarEnArgentina.map((img => <Image style={styles.imgItem} source={img} />), index)}
 
@@ -145,7 +212,7 @@ function DolarEnArgentina({ navigation }) {
             </View>
           </View>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     )
   }
 
@@ -178,7 +245,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   itemContainer: {
-    padding: 15,
+
   },
   taskWrapper: {
     paddingTop: 80,
@@ -280,8 +347,42 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
     textAlign: 'center',
-  }
+  },
 
+  /* STYLES COTIZADOR */
+  containerCalculadora: {
+    padding: 30,
+    backgroundColor: 'white',
+    textAlign: 'center',
+    alignItems: 'center',
+    fontSize: 30,
+  },
+  containerPrice: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    flex: 1,
+    padding: 5,
+  },
+  TextNamePrice: {
+    fontSize: 15,
+    paddingTop: 15,
+  },
+  TextName: {
+    fontSize: 50,
+  },
+  tinyLogoCalculator: {
+    width: 100,
+    height: 100,
+  },
+  TextInput: {
+    backgroundColor: '#d5e5a4',
+    margin: 10,
+    width: 100,
+    borderRadius: 10,
+    fontSize: 25,
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
 });
 
 
