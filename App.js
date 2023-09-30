@@ -77,7 +77,7 @@ function DolarEnLosBancos() {
       </View>
     )
   }
-
+  useEffect(() => {console.log(data)}, [data])
   useEffect(() => {
     fetch('https://www.dolarsi.com/api/api.php?type=capital')
       .then((response) => response.json())
@@ -117,28 +117,30 @@ const ButtonCalculadora = () => {
 
 
   const catchItem = ({ item, index }) => {
-
     if (index == 1) {
       const amountBlue = item.casa.venta;
       const amountBlueCompra = item.casa.compra;
 
       const handleInputA = (e) => {
-        console.log(e);
-        console.log(amountBlue);
-        setCantidad(e);
-        calculate();
-      }
-
-
-      const calculate = () => {
-        if (cantidad !== "" && amountBlue !== "") {
-          const res = parseFloat(cantidad) * parseFloat(amountBlue);
-          console.log(res);
+        if (e !== '') {
+          setCantidad(e)
+          console.log(cantidad, 'cantidad')
+          console.log(amountBlue, 'amountBlue')
+          const res = parseFloat(e) * parseFloat(amountBlue);
           setResult(res.toString());
-        } else {
-          setResult('');
         }
       }
+
+      
+      // const calculate = () => {
+      //   if (cantidad.length !== '') {
+      //     const res = parseFloat(cantidad) * parseFloat(amountBlue);
+      //     console.log(cantidad, 'cantidad')
+      //     console.log(amountBlue, 'amountblue')
+      //     console.log(res, 'res');
+      //     setResult(res.toString());
+      //   }
+      // }
 
       return (
         <View style={styles.containerCalculadora}>
@@ -190,33 +192,33 @@ function DolarEnArgentina({ navigation }) {
 
 
   const renderItem = ({ item, index }) => {
-
+    console.log(item.casa.venta, 'ITEM CASA VENTA')
     return (
-      <ScrollView>
+      <View>
         <TouchableOpacity onPressIn={() => navigation.navigate('Calculadora de Conversion')}>
           <View style={styles.item} key={index}>
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
 
 
-              {imagesDolarEnArgentina.map((img => <Image style={styles.imgItem} source={img} />), index)}
+               {imagesDolarEnArgentina.map((img => <Image style={styles.imgItem} source={img} key={index}/>), index)} 
 
             </View>
 
             <Text style={styles.itemNombre}>{item.casa.nombre}</Text>
             <View style={styles.itemColumn}>
-              <Text style={styles.itemVenta}>Venta: {item.casa.venta}</Text>
-              <Text style={styles.itemCompra}>Compra: {item.casa.compra}</Text>
+              <Text style={styles.itemVenta}>Venta: {typeof(item.casa.venta) !== 'object' ? item.casa.venta : ''}</Text>
+                 <Text style={styles.itemCompra}>Compra: {typeof(item.casa.compra) !== 'object' ? item.casa.compra : ''}</Text>
               <Text style={styles.itemVariacion}>Ultima Varacion: {item.casa.variacion}%</Text>
 
             </View>
           </View>
         </TouchableOpacity>
-      </ScrollView>
+      </View>
     )
   }
 
   useEffect(() => {
-    fetch('https://www.dolarsi.com/api/api.php?type=valoresprincipales')
+    fetch('https://www.dolarsi.com/api/api.php?type=valoresprincipales') //CHECKEAR COMO VIENE ESTE JSON
       .then((response) => response.json())
       .then((json) => setData(json))
       .catch((error) => console.error(error))
