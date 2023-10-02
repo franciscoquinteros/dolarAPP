@@ -21,13 +21,22 @@
       "supportsTablet": true
     },
     "android": {
+      "compileSdkVersion": 33,
+      "targetSdkVersion": 33,
+      "buildToolsVersion": "33.0.0",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.fquinteros.dolarARG"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4e4b6a2c-bb29-419f-b3a1-32bc138f1e63"
+      }
     }
   }
 }

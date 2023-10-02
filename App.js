@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, Image, FlatList, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, FlatList, TouchableOpacity, TextInput, Pressable } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -33,16 +33,19 @@ function HomeScreen({ navigation }) {
             }></Image>
         </View>
         <View style={styles.items}>
-          <Button
+          {/* <Button
             title="Dolar en Argentina"
             onPress={() => navigation.navigate('Cotizacion dolar hoy')}
-          />
+          /> */}
+          <Pressable onPress={() => navigation.navigate('Cotizacion dolar hoy')}>
+  <Text style={styles.colorText}>Dolar en Argentina</Text>
+</Pressable>
         </View>
         <View style={styles.items2}>
-          <Button
-            title="Dolar en los bancos"
-            onPress={() => navigation.navigate('Cotizacion dolar por Banco')}
-          />
+          
+          <Pressable  onPress={() => navigation.navigate('Cotizacion dolar por Banco')}>
+  <Text style={styles.colorText}>Dolar en los bancos</Text>
+</Pressable>
         </View>
       </View>
 
@@ -144,7 +147,7 @@ const ButtonCalculadora = () => {
 
       return (
         <View style={styles.containerCalculadora}>
-          <Text style={styles.TextName} >Dolar Blue </Text>
+          <Text style={styles.TextName}> Calculadora de conversion: </Text>
           <Image
             style={styles.tinyLogoCalculator}
             source={require('./assets/dolar.png')}></Image>
@@ -192,10 +195,9 @@ function DolarEnArgentina({ navigation }) {
 
 
   const renderItem = ({ item, index }) => {
-    console.log(item.casa.venta, 'ITEM CASA VENTA')
     return (
       <View>
-        <TouchableOpacity onPressIn={() => navigation.navigate('Calculadora de Conversion')}>
+        {/* <TouchableOpacity onPressIn={() => navigation.navigate('Calculadora de Conversion')}> */}
           <View style={styles.item} key={index}>
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
 
@@ -212,13 +214,13 @@ function DolarEnArgentina({ navigation }) {
 
             </View>
           </View>
-        </TouchableOpacity>
+        {/* </TouchableOpacity> */}
       </View>
     )
   }
 
   useEffect(() => {
-    fetch('https://www.dolarsi.com/api/api.php?type=valoresprincipales') //CHECKEAR COMO VIENE ESTE JSON
+    fetch('https://www.dolarsi.com/api/api.php?type=valoresprincipales')
       .then((response) => response.json())
       .then((json) => setData(json))
       .catch((error) => console.error(error))
@@ -227,9 +229,14 @@ function DolarEnArgentina({ navigation }) {
 
   return (
     <View>
-
+      {!isLoading && 
+      <Pressable onPress={() => navigation.navigate('Calculadora de Conversion')}
+      style={{backgroundColor: 'yellow', position: 'absolute', bottom: 10, padding: 30, right: 10, zIndex: 10, borderRadius: 50}}>
+  <Text>Calculadora!</Text>
+</Pressable>}
       {isLoading ? (<Text>Loading... </Text>) : (
         <View style={styles.itemContainer}>
+          
           <FlatList data={data} renderItem={renderItem} />
         </View>
       )}
@@ -246,6 +253,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   itemContainer: {
+    //position: 'relative',
 
   },
   taskWrapper: {
@@ -300,8 +308,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 100,
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 30,
     marginTop: 100,
+    textAlign: 'center',
+  },
+  colorText: {
+    color: 'blue',
+    fontWeight: '600',
+    fontSize: 20,
+    width: '100%',
+    textAlignVertical: "center",
   },
   itemVariacion: {
     paddingTop: 15,
@@ -382,7 +397,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontSize: 25,
     textAlign: 'center',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+  },
+  buttomCalculator: {
+    position: 'absolute',
+    width: '10px',
+    bottom: '50px',
+    left: 0,
   },
 });
 
